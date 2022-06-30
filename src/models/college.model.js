@@ -1,14 +1,14 @@
 const mongoose = require("mongoose")
 
 const collegeSchema = new mongoose.Schema({
-    name: {                                      //example iith
+    name: {                                     
         type: String,
         unique: true,
         required: 'College name is required',
         trim: true,
         lowercase:true
     },
-    fullName: {                               //`Indian Institute of Technology, Hyderabad`
+    fullName: {                              
         type: String,
         require: 'Fullname is required',
         trim: true,

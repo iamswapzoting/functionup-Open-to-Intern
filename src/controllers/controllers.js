@@ -1,6 +1,7 @@
 const collegeModel = require("../models/college.model")
 const internModel = require("../models/intern.model")
 
+const linkRegex=/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%\+.~#()?&//=]*)/igm 
 
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === 'null') return false     
@@ -49,6 +50,9 @@ let collegeData = async  (req, res) => {
         if (!isValid(data.logoLink)) {
             res.status(400).send({ status: false, message: "logolink is required" })
             return;
+        }
+        if(!data.logoLink.match(linkRegex)) {
+            return res.status(400).send({status:"false", msg:'use valid Logolink'})
         }
 
         //validations ends
@@ -147,15 +151,15 @@ let internData = async  (req, res) =>{
 
 let collegeDetails = async  (req, res) => {
     try {
-        let query = req.query.collegeName
-
+        let query = req.query.collegeName.toLowerCase()
+    
         //validation starts
         if (!isValid(query)) {
-            res.status(400).send({ status: false, message: "Invalid request parameters. Please provide intern details" })
+            res.status(400).send({ status: false, message: "Invalid request parameters. Please provide Collage Name" })
             return;
         }
         if (!query.match(/^[a-z]+$/)) {
-            res.status(400).send({ status: false, message: "Name should be in valid format" })
+            res.status(400).send({ status: false, message: "Collage Name should be in valid format" })
             return;
         }
         let specificCollege = await collegeModel.findOne({ name: query })
@@ -165,10 +169,10 @@ let collegeDetails = async  (req, res) => {
         }
 
         let id = specificCollege._id.toString()
-        let intern = await internModel.find({ collegeId: id, isDeleted: false })
+        let intern = await internModel.find({ collegeId: id, isDeleted: false }).select({_id:1,name:1,email:1,mobile:1,})
 
         if(!isValidrequestBody(intern)){
-            res.status(400).send({status:false, message: "no intern is regestered"})
+            res.status(400).send({status:false, message: "no intern is registered"})
             return;
         }
         
