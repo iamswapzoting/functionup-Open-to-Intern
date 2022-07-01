@@ -88,7 +88,6 @@ let internData = async  (req, res) =>{
             res.status(400).send({ status: false, message: "Name should be in valid format" })
             return;
         }
-
         if (!isValid(email)) {
             res.status(400).send({ status: false, message: "email is required" })
             return;
@@ -159,8 +158,8 @@ let collegeDetails = async  (req, res) => {
             return;
         }
         if (!query.match(/^[a-z]+$/)) {
-            res.status(400).send({ status: false, message: "Collage Name should be in valid format" })
-            return;
+            return res.status(400).send({ status: false, message: "Collage Name should be in valid format" })
+            
         }
         let specificCollege = await collegeModel.findOne({ name: query })
         if (!specificCollege) {
